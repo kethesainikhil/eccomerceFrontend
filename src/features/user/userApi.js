@@ -1,7 +1,7 @@
 export function getUser({data}) {
   console.log(data,'password')
     return new Promise((resolve) =>{
-       fetch("http://localhost:3000/login/",{
+       fetch("https://ecommercebackend-9fmc.onrender.com/login/",{
         method:"POST",
         body:JSON.stringify({email:data.email,password:data.password}),
         headers:{'content-type':'application/json'}

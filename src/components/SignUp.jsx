@@ -14,7 +14,7 @@ const SignUp = () => {
             return
         }
         else{
-            axios.post("http://localhost:3000/signup",data).then((res)=>{
+            axios.post("https://ecommercebackend-9fmc.onrender.com/signup",data).then((res)=>{
             console.log(res.data)
         }).catch((error)=>{
             console.log(error)

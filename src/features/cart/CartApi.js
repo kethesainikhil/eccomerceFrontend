@@ -15,7 +15,7 @@ export function AddToCart(product) {
       price)
       console.log(userId,"useid chekcing in api ")
     return new Promise((resolve) =>{
-       fetch("http://localhost:3000/addtocart",{
+       fetch("https://ecommercebackend-9fmc.onrender.com/addtocart",{
         method:"POST",
         body:JSON.stringify({
           id,
@@ -39,7 +39,7 @@ export function AddToCart(product) {
   }
 export function deleteToCart(id) {
     return new Promise((resolve) =>{
-       fetch(`http://localhost:3000/${id}`,{
+       fetch(`https://ecommercebackend-9fmc.onrender.com/${id}`,{
         method:"DELETE",
         headers:{'content-type':'application/json'}
       }).then(async (response)=>{
@@ -52,7 +52,7 @@ export function deleteToCart(id) {
 export function updateToCart(productDetails) {
     const {productCategory,productId} = productDetails
     return new Promise((resolve) =>{
-       fetch(`http://localhost:3000/${productCategory}/${productId}`,{
+       fetch(`https://ecommercebackend-9fmc.onrender.com/${productCategory}/${productId}`,{
         method:"GET",
         headers:{'content-type':'application/json'}
       }).then(async (response)=>{
