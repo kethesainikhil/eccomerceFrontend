@@ -18,7 +18,7 @@ const ProductDetail = () => {
     const obj = {...product,userId:user?._id}
     console.log(obj,"obj in add to cart")
       dispatch(addToCartAsync(obj))
-
+      navigate("/cart")
     console.log(user?._id,"user id in when click on add to cart")
   }
 useEffect (()=>{
