@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
- import {getUser} from "./userApi"
+ import {getUser, postUser} from "./userApi"
 const initialState = {
   user: null
 };
@@ -8,6 +8,15 @@ export const getUserAsync = createAsyncThunk(
   async (data) => {
     console.log("async thunk")
     const response = await getUser(data)
+    console.log("resonse",response)
+    return response;
+  }
+);
+export const postUserAsync = createAsyncThunk(
+  'getallusers',
+  async (data) => {
+    console.log("async thunk")
+    const response = await postUser(data)
     console.log("resonse",response)
     return response;
   }

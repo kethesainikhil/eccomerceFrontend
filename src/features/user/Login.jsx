@@ -17,8 +17,11 @@ const Login = () => {
         dispatch(getUserAsync({data}))
         console.log("in login page",user)
         if(user?._id){
+
             localStorage.setItem("user",JSON.stringify(user))
-            navigate("/home")
+            setTimeout(()=>{
+                navigate("/home")
+            },[500])
         }
       },[data,dispatch,user,navigate])
       const submitHandle = (input) =>{

@@ -1,26 +1,30 @@
-import React from 'react'
-import {Link} from "react-router-dom"
+import React, { useEffect, useState } from 'react'
+import {Link, useNavigate} from "react-router-dom"
 import {useForm} from "react-hook-form"
 import axios from "axios"
+import { useDispatch, useSelector } from 'react-redux'
+import { postUserAsync } from './userSlice'
 const SignUp = () => {
     const {
         register,
         handleSubmit,
-      } = useForm();
-      const submitHandle = (data) =>{
-        console.log(data)
-        if(data.password !== data.confirmPassword){
-            alert("password does not match")
-            return
+      } = useForm();     
+      const navigate = useNavigate();
+      const dispatch =useDispatch();
+      const [data,setData] = useState();
+      const user = useSelector((state)=>state.user.user)
+      useEffect(()=>{
+        dispatch(postUserAsync({data}))
+        if(user?._id){
+            localStorage.setItem("user",JSON.stringify(user))
+            setTimeout(()=>{
+                navigate("/home")
+            },[500])
         }
-        else{
-            axios.post("https://ecommercebackend-9fmc.onrender.com/signup",data).then((res)=>{
-            console.log(res.data)
-        }).catch((error)=>{
-            console.log(error)
-        })
-        }
-        
+      },[data,dispatch,user,navigate])
+      const submitHandle = (input) =>{
+        setData(input)
+
       }
   return (
     <div>

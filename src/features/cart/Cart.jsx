@@ -1,22 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { incrementQuantity, updateQuantityAsync } from "./CartSlice";
+import { deleteToCartAsync, getAllCartItemsAsync, incrementQuantity, updateQuantityAsync } from "./CartSlice";
 
 function Cart() {
-  const cartItems = useSelector((state)=>state.Cart.cartItems);
   let total = 0;
 const dispatch = useDispatch()
-  const handleClick = (productDetails) =>{
-    console.log(productDetails)
+const string = localStorage.getItem("user")
+const user = JSON.parse(string);
 
+const cartItems = useSelector((state)=>state.Cart.cartItems)
+const shipping = useRef(0);
+  const handleClick = (cartId) =>{
+    dispatch(deleteToCartAsync(cartId))
   }
-  const handleQuantity = () =>{
+  const handleQuantity = (data) =>{
+    data.price = Math.round(data.price)
+    if(data.value){
+      data.price = data.price / data.quantity
+    }
+    else{
+      data.price = data.price * data.quantity
+    }
+    console.log(data,"data")
+    if(data.quantity === 0){
+      dispatch(deleteToCartAsync({cartId:data.cartId}))
+    }
+    else{
+      dispatch(updateQuantityAsync(data))
+    }
+    
     // const {productId} = productDetails
     // dispatch(incrementQuantity(productId))
-    cartItems.map((item)=>{
-      console.log(item)
-    })
   }
+  useEffect(()=>{
+    if(cartItems?.length > 0){
+      shipping.current = 10
+    }
+    console.log(user._id,"usre in cart")
+    dispatch(getAllCartItemsAsync(user._id))
+  },[user._id,dispatch,cartItems])
     return (
         <section className="h-screen bg-gray-100 py-12 sm:py-16 lg:py-20">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +55,7 @@ const dispatch = useDispatch()
                       cartItems?.map((item)=>{
                         total += item.price
                        return(
-                        <div key={item.id}> 
+                        <div key={item._id}> 
                           <li className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
                         <div className="shrink-0">
                           <img className="h-24 w-24 max-w-full rounded-lg object-cover" src={item.image_url} alt="" />
@@ -50,11 +72,18 @@ const dispatch = useDispatch()
         
                               <div className="sm:order-1">
                                 <div className="mx-auto flex h-8 items-stretch text-gray-600">
-                                  <button className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">-</button>
+                                  <button  onClick={()=>{handleQuantity({
+                                    value:true,
+                                cartId:item._id,
+                                quantity:item.quantity - 1,
+                                price: item.price 
+                              })}} className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">-</button>
                                   <div className="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">{item.quantity}</div>
                                   <button onClick={()=>{handleQuantity({
-                                productId:item.id,
-                                productCategory:item.category
+                                    value:false,
+                                cartId:item._id,
+                                quantity:item.quantity + 1,
+                                price: item.price 
                               })}} className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">+</button>
                                 </div>
                               </div>
@@ -64,8 +93,7 @@ const dispatch = useDispatch()
                           <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
                             <button type="button" onClick={()=>{handleClick(
                               {
-                                productId:item.id,
-                                productCategory:item.category
+                                cartId:item._id
                               }
                             )}} className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
                               <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,12 +117,12 @@ const dispatch = useDispatch()
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-400">Shipping</p>
-                    <p className="text-lg font-semibold text-gray-900">$8.00</p>
+                    <p className="text-lg font-semibold text-gray-900">${shipping.current}</p>
                   </div>
                 </div>
                 <div className="mt-6 flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">Total</p>
-                  <p className="text-2xl font-semibold text-gray-900"><span className="text-xs font-normal text-gray-400">USD</span> {Math.round( total + 8)}</p>
+                  <p className="text-2xl font-semibold text-gray-900"><span className="text-xs font-normal text-gray-400">USD</span> {Math.round( total + shipping.current)}</p>
                 </div>
       
                 <div className="mt-6 text-center">

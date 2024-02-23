@@ -5,7 +5,8 @@ import Login from '../features/user/Login';
 import Home from './Home';
 
 const Protected = ({children}) => {
-    const user = useSelector((state)=>state.user.user)
+    const string = localStorage.getItem("user")
+const user = JSON.parse(string);
     const navigate = useNavigate();
     console.log(user,"user in protected apge")
     if(user === null){

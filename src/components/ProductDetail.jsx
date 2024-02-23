@@ -10,15 +10,19 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const product = useSelector((state)=>state.products.selectedProduct[0])
-  const user = useSelector((state)=>state.user.user);
+  const string = localStorage.getItem("user")
+  const user = JSON.parse(string);
+  console.log(productDetails,"paramas")
   const handleClick = () =>{
     console.log(product,"pro details")
-    const obj = {...product,userId:user._id}
+    const obj = {...product,userId:user?._id}
+    console.log(obj,"obj in add to cart")
       dispatch(addToCartAsync(obj))
 
-    console.log(user._id,"user id in when click on add to cart")
+    console.log(user?._id,"user id in when click on add to cart")
   }
 useEffect (()=>{
+  console.log(productDetails,"checkind id");
   dispatch(selectProductAsync(productDetails))
 },[productDetails,dispatch])
 console.log(product,"checkind id");

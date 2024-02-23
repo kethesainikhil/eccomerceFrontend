@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import {useNavigate} from "react-router-dom"
 export default function Home() {
     const navigate  = useNavigate();
-    const selector = useSelector((state)=>state.user);
 
     const handleClick = (e) =>{
         navigate(`/${e.target.innerText}`)

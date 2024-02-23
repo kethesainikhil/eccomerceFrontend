@@ -63,20 +63,19 @@ function Header() {
   const text = useRef("Login");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state)=>state.user.user)
+  const string = localStorage.getItem("user")
+  const user = JSON.parse(string);
 
   const handleLoginButton = () =>{
     if(user?._id){
       dispatch(logoutuser())
       localStorage.removeItem("user")
-      console.log(localStorage.getItem("user"),"when logout button clicked user info")
       navigate("/login")
     }
     else{
       navigate("/login")
     }}
   useEffect(()=>{
-    console.log("header logging",user)
     if(user?._id){
       text.current = "Logout"
     }

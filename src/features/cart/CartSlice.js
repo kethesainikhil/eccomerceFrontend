@@ -1,25 +1,30 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AddToCart, deleteToCart, updateToCart } from './CartApi';
+import { AddToCart, deleteToCart, getCartItems, updateToCart } from './CartApi';
 
 const initialState = {
-  cartItems: [
-  ],
+  cartItems: null
 
 };
 export const addToCartAsync = createAsyncThunk(
   'cart/addItem',
   async (product) => {
     console.log(product,"product deails")
-
     const response = await AddToCart(product);
-    console.log(response,"response from asyncccc")
+    return response
+  }
+);
+export const getAllCartItemsAsync = createAsyncThunk(
+  'cart/getItems',
+  async (userId) => {
+
+    const response = await getCartItems (userId);
     return response
   }
 );
 export const updateQuantityAsync = createAsyncThunk(
   'cart/updateItem',
-  async (productDetails) => {
-    const response = await updateToCart(productDetails);
+  async (data) => {
+    const response = await updateToCart(data);
     // The value we return becomes the `fulfilled` action payload
     return response;
   }
@@ -27,11 +32,10 @@ export const updateQuantityAsync = createAsyncThunk(
 
 export const deleteToCartAsync = createAsyncThunk(
   'cart/deleteProduct',
-  async (id) => {
-    const response = await deleteToCart(id);
-    return {
-
-    };
+  async (cartId) => {
+    console.log(cartId,"cart id")
+    const response = await deleteToCart(cartId);
+    return response;
   }
 );
 
@@ -41,8 +45,7 @@ export const cartSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    incrementQuantity: (state, action) => {
-      const { id } = action.payload;
+    incrementQuantity: (state) => {
       const updatedCartItems = state.cartItems.map(item =>
         item[0].id === id
           ? { ...item[0], quantity: item[0].quantity + 1 } // Update quantity for the matching item
@@ -63,22 +66,14 @@ export const cartSlice = createSlice({
       })
       .addCase(addToCartAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-
-        state.cartItems.push(action.payload);
+      })
+      .addCase(getAllCartItemsAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.cartItems = action.payload
       })
       .addCase(deleteToCartAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         state.cartItems.map(item => item.id !== action.payload)
-      })
-      .addCase(updateQuantityAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        console.log(action.payload,"action.payload")
-        state.cartItems = state.cartItems.map(item =>
-          
-          item.id === action.payload[0].id
-            ? { ...item, quantity: item.quantity + 3 } // Create a new object with updated quantity
-            : item
-        );
       })
 
   },

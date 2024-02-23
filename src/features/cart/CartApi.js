@@ -5,7 +5,8 @@ export function AddToCart(product) {
       image_url,
       category,
       quantity,
-      price,userId
+      price,
+      userId
     } = product
     console.log(id,
       title,
@@ -15,7 +16,8 @@ export function AddToCart(product) {
       price)
       console.log(userId,"useid chekcing in api ")
     return new Promise((resolve) =>{
-       fetch("https://ecommercebackend-9fmc.onrender.com/addtocart",{
+      console.log("in promiseeee")
+       fetch("https://ecommercebackend-9fmc.onrender.com/cart/addtocart",{
         method:"POST",
         body:JSON.stringify({
           id,
@@ -37,10 +39,11 @@ export function AddToCart(product) {
       })  
     })
   }
-export function deleteToCart(id) {
+export function deleteToCart(cartId) {
     return new Promise((resolve) =>{
-       fetch(`https://ecommercebackend-9fmc.onrender.com/${id}`,{
+       fetch("https://ecommercebackend-9fmc.onrender.com/cart/deleteItem/",{
         method:"DELETE",
+        body:JSON.stringify(cartId),
         headers:{'content-type':'application/json'}
       }).then(async (response)=>{
         const data = await response.json()
@@ -50,9 +53,21 @@ export function deleteToCart(id) {
     })
   }
 export function updateToCart(productDetails) {
-    const {productCategory,productId} = productDetails
+    const {cartId,quantity,price} = productDetails
     return new Promise((resolve) =>{
-       fetch(`https://ecommercebackend-9fmc.onrender.com/${productCategory}/${productId}`,{
+       fetch("https://ecommercebackend-9fmc.onrender.com/cart/updateItem",{
+        method:"PATCH",
+        body:JSON.stringify({cartId,quantity,price}),
+        headers:{'content-type':'application/json'}
+      }).then(async (response)=>{
+        const data = await response.json()
+        resolve(data)
+      })
+    })
+  }
+export function getCartItems(userId) {
+    return new Promise((resolve) =>{
+       fetch(`https://ecommercebackend-9fmc.onrender.com/cart/cartItems/${userId}`,{
         method:"GET",
         headers:{'content-type':'application/json'}
       }).then(async (response)=>{

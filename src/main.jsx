@@ -11,7 +11,7 @@ import Login from './features/user/Login.jsx'
 import ProductsPage from './features/products/ProductsPage.jsx'
 import ProductDetail from './components/ProductDetail.jsx'
 import WishList from './components/WishList.jsx'
-import SignUp from './components/SignUp.jsx'
+import SignUp from './features/user/SignUp.jsx'
 import Cart from './features/cart/Cart.jsx'
 import Protected from './components/Protected.jsx'
 const router = createBrowserRouter ([
@@ -39,12 +39,14 @@ const router = createBrowserRouter ([
         path: '/:productCategory/:productId',
         element: <Protected><ProductDetail /></Protected>
       },
+
     ]
   },
   {
     path: '/login',
     element: <Login />
   },
+
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
