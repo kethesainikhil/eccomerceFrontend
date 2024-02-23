@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from "react-hook-form"
 import {Link, useNavigate} from "react-router-dom"
 import axios from "axios"
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getUserAsync } from './userSlice'
 const Login = () => {
     const {
@@ -11,10 +11,19 @@ const Login = () => {
       } = useForm();
       const navigate = useNavigate();
       const dispatch =useDispatch();
-      const submitHandle = (data) =>{
-        console.log(data)
+      const [data,setData] = useState();
+      const user = useSelector((state)=>state.user.user)
+      useEffect(()=>{
         dispatch(getUserAsync({data}))
-        navigate("/")
+        console.log("in login page",user)
+        if(user?._id){
+            localStorage.setItem("user",JSON.stringify(user))
+            navigate("/home")
+        }
+      },[data,dispatch,user,navigate])
+      const submitHandle = (input) =>{
+        setData(input)
+
       }
   return (
     <div>

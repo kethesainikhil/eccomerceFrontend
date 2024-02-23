@@ -13,22 +13,19 @@ import ProductDetail from './components/ProductDetail.jsx'
 import WishList from './components/WishList.jsx'
 import SignUp from './components/SignUp.jsx'
 import Cart from './features/cart/Cart.jsx'
+import Protected from './components/Protected.jsx'
 const router = createBrowserRouter ([
   {
     path: '/',
-    element: <App />,
+    element: <Protected><App /></Protected>,
     children:[
       {
-        path: '/',
-        element: <Home />
+        path: '/home',
+        element: <Protected><Home /></Protected>
       },
       {
         path: '/cart',
-        element: <Cart />
-      },
-      {
-        path: '/login',
-        element: <Login />
+        element: <Protected> <Cart /></Protected>
       },
       {
         path: '/signup',
@@ -36,17 +33,18 @@ const router = createBrowserRouter ([
       },
       {
         path: '/:id',
-        element: <ProductsPage />
+        element: <Protected><ProductsPage /></Protected>
       },
       {
         path: '/:productCategory/:productId',
-        element: <ProductDetail />
+        element: <Protected><ProductDetail /></Protected>
       },
-
-
-
     ]
-  }
+  },
+  {
+    path: '/login',
+    element: <Login />
+  },
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

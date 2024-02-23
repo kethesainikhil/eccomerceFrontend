@@ -5,7 +5,6 @@ export default function Home() {
     const navigate  = useNavigate();
     const selector = useSelector((state)=>state.user);
 
-    console.log(selector)
     const handleClick = (e) =>{
         navigate(`/${e.target.innerText}`)
     }
